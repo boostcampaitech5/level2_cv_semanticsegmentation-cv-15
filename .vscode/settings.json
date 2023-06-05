@@ -1,0 +1,10 @@
+{
+    "python.linting.enabled": true,
+    "python.defaultInterpreterPath": "/opt/ml/level2_cv_semanticsegmentation-cv-15/.venv/bin/python3.11",
+    "python.formatting.provider": "black",
+    "python.formatting.blackArgs": [
+        "--line-length",
+        "88"
+    ],
+    "editor.formatOnSave": true
+}
