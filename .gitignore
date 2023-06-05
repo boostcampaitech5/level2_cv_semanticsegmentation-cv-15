@@ -109,3 +109,6 @@ poetry.lock
 
 # test code
 test.py
+
+# dataset
+/data
