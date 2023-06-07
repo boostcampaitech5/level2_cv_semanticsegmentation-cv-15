@@ -112,3 +112,13 @@ test.py
 
 # dataset
 /data
+
+# lightning log
+/lightning_logs
+/checkpoint
+
+# wandb log
+/wandb
+
+# profiler log
+/logs
