@@ -23,9 +23,13 @@ tqdm = "^4.65.0"
 rich = "^13.4.1"
 torchmetrics = "^0.11.4"
 pytorch-lightning = "^2.0.2"
+openmim = "^0.3.7"
 
 [tool.black]
 line-length = 88
+
+[tool.isort]
+profile = "black"
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^6.0.0"
