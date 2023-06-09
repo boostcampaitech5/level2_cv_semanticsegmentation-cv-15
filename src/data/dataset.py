@@ -35,51 +35,74 @@ class XRayDataset(Dataset):
         if self.split == "train":
             with open(os.path.join(self.data_path, "train_label.json"), "r") as f:
                 self.file_name = json.load(f)
-        else:
+        elif self.split == "val":
             with open(os.path.join(self.data_path, "val_label.json"), "r") as f:
                 self.file_name = json.load(f)
+        elif self.split == "test":
+            with open(os.path.join(self.data_path, "test_label.json"), "r") as f:
+                self.file_name = json.load(f)
+            pass
+        else:
+            raise Exception("split은 train/val/test 중 하나여야 합니다.")
 
     def __len__(self) -> int:
         return len(self.file_name)
 
     def __getitem__(self, index):
-        image_path = os.path.join(
-            self.data_path, "train", self.file_name[index] + ".png"
-        )
-        image = cv2.imread(image_path)
-        image = image / 255.0
+        if self.split in ["train", "val"]:
+            image_path = os.path.join(
+                self.data_path, "train", self.file_name[index] + ".png"
+            )
+            image = cv2.imread(image_path)
 
-        label_shape = tuple(image.shape[:2]) + (len(self.classes),)
-        label = np.zeros(label_shape, dtype=np.uint8)
+            label_shape = tuple(image.shape[:2]) + (len(self.classes),)
+            label = np.zeros(label_shape, dtype=np.uint8)
 
-        with open(
-            os.path.join(self.data_path, "annotation", self.file_name[index] + ".json"),
-            "r",
-        ) as f:
-            annotations = json.load(f)
-        annotations = annotations["annotations"]
+            with open(
+                os.path.join(
+                    self.data_path, "annotation", self.file_name[index] + ".json"
+                ),
+                "r",
+            ) as f:
+                annotations = json.load(f)
+            annotations = annotations["annotations"]
 
-        for anno in annotations:
-            c = anno["label"]
-            class_index = self.class_to_index[c]
-            points = np.array(anno["points"])
+            for anno in annotations:
+                c = anno["label"]
+                class_index = self.class_to_index[c]
+                points = np.array(anno["points"])
 
-            mask = np.zeros(image.shape[:2], dtype=np.uint8)
-            cv2.fillPoly(mask, [points], 1)
-            label[..., class_index] = mask
+                mask = np.zeros(image.shape[:2], dtype=np.uint8)
+                cv2.fillPoly(mask, [points], 1)
+                label[..., class_index] = mask
+        else:
+            image_path = os.path.join(
+                self.data_path, "test", self.file_name[index] + ".png"
+            )
+            image = cv2.imread(image_path)
 
         if self.transforms is not None:
             if self.split == "train":
                 aug_img = self.transforms(image=image, mask=label)
                 image = aug_img["image"]
                 label = aug_img["mask"]
+                label = label.permute(2, 0, 1).float()
+            elif self.split == "val":
+                aug_img = self.transforms(image=image)
+                image = aug_img["image"]
+                label = label.transpose(2, 0, 1)
+                label = torch.from_numpy(label).float()
             else:
                 aug_img = self.transforms(image=image)
                 image = aug_img["image"]
+        else:
+            image = image.transpose(2, 0, 1)  # make channel first
+            label = label.transpose(2, 0, 1)
 
-        image = image.transpose(2, 0, 1)  # make channel first
-        label = label.transpose(2, 0, 1)
+            image = torch.from_numpy(image).float()
+            label = torch.from_numpy(label).float()
 
-        image = torch.from_numpy(image).float()
-        label = torch.from_numpy(label).float()
-        return image, label
+        if self.split in ["train", "val"]:
+            return image, label
+        else:
+            return image, self.file_name[index]
