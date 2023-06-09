@@ -23,6 +23,7 @@ tqdm = "^4.65.0"
 rich = "^13.4.1"
 torchmetrics = "^0.11.4"
 pytorch-lightning = "^2.0.2"
+openmim = "^0.3.7"
 segmentation-models-pytorch = "^0.3.3"
 pandas = "^2.0.2"
 
