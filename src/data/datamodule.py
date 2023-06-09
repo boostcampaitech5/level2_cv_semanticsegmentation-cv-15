@@ -1,49 +1,30 @@
-import albumentations as A
 from pytorch_lightning import LightningDataModule
-from torch.utils.data import DataLoader
-
-from data.dataset import XRayDataset
 
 
 class XRayDataModule(LightningDataModule):
     def __init__(
         self,
-        data_path: str,
-        batch_size: int,
-        shuffle: bool = True,
-        split: str = "train",
-        transforms: A.Compose = None,
+        train_dataset,
+        train_loader,
+        val_dataset,
+        val_loader,
+        test_dataset,
+        test_loader,
     ):
         super().__init__()
 
-        self.data_path = data_path
-        self.batch_size = batch_size
-        self.shuffle = shuffle
-        self.split = split
-        self.transforms = transforms
+        self.train_dataset = train_dataset
+        self.train_loader = train_loader
+        self.val_dataset = val_dataset
+        self.val_loader = val_loader
+        self.test_dataset = test_dataset
+        self.test_loader = test_loader
 
     def train_dataloader(self):
-        return DataLoader(
-            dataset=XRayDataset(
-                data_path=self.data_path,
-                split="train",
-                transforms=self.transforms,
-            ),
-            batch_size=self.batch_size,
-            shuffle=self.shuffle,
-            num_workers=6,
-            prefetch_factor=2,
-            persistent_workers=True,
-            pin_memory=True,
-        )
+        return self.train_loader(dataset=self.train_dataset())
 
     def val_dataloader(self):
-        return DataLoader(
-            dataset=XRayDataset(data_path=self.data_path, split="val"),
-            batch_size=2,
-            shuffle=self.shuffle,
-            num_workers=2,
-            prefetch_factor=2,
-            persistent_workers=True,
-            pin_memory=True,
-        )
+        return self.val_loader(dataset=self.val_dataset())
+
+    def test_dataloader(self):
+        return self.test_loader(dataset=self.test_dataset())

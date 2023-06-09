@@ -122,3 +122,6 @@ test.py
 
 # profiler log
 /logs
+
+# hydra log
+/outputs
