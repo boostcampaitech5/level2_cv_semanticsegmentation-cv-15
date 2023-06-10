@@ -113,6 +113,8 @@ class UNetPlusPlusResNet50(LightningModule):
             logger=True,
         )
 
+        self.dice = list()
+
     def test_step(self, batch: torch.Tensor, batch_idx: int) -> None:
         x, image_names = batch
         outputs = self.forward(x)
