@@ -27,6 +27,22 @@ UnetPlusPlusResNet152ImagenetConfig = full_builds(
     classes=29,
 )
 
+UnetPlusPlusTimmResNestImagenetConfig = full_builds(
+    UnetPlusPlus,
+    encoder_name="timm-resnest269e",
+    encoder_weights="imagenet",
+    in_channels=3,
+    classes=29,
+)
+
+UnetPlusPlusResNestImagenetConfig = full_builds(
+    UnetPlusPlus,
+    encoder_name="resnest",
+    encoder_weights="imagenet",
+    in_channels=3,
+    classes=29,
+)
+
 DeepLabV3ResNet50ImagenetConfig = full_builds(
     DeepLabV3,
     encoder_name="resnet50",
@@ -61,6 +77,11 @@ def _register_configs():
         group="architecture",
         name="unet++_resnet152_imagenet",
         node=UnetPlusPlusResNet152ImagenetConfig,
+    )
+    cs.store(
+        group="architecture",
+        name="unet++_timm_resnest_imagenet",
+        node=UnetPlusPlusTimmResNestImagenetConfig,
     )
     cs.store(
         group="architecture",
