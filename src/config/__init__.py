@@ -19,7 +19,7 @@ defaults = [
     "_self_",
     {"architecture": "unet++_resnet152_imagenet"},
     {"optimizer": "adam"},
-    {"loss": "bce_with_logits"},
+    {"loss": "dice_bce"},
     {"scheduler": "onecycle"},
     {"datamodule": "xray"},
     {"datamodule/train_dataset": "basic_train_dataset"},
@@ -31,7 +31,7 @@ defaults = [
     {"datamodule/train_loader": "basic_train_loader"},
     {"datamodule/val_loader": "basic_val_loader"},
     {"datamodule/test_loader": "basic_test_loader"},
-    {"trainer": "profile"},
+    {"trainer": "basic"},
     {"trainer/callbacks": "basic_callbacks"},
     {"trainer/logger": "wandb"},
 ]
