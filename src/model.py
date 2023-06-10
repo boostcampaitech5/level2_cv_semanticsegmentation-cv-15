@@ -125,7 +125,9 @@ class UNetPlusPlusResNet50(LightningModule):
             for c, segm in enumerate(output):
                 rle = encode_mask_to_rle(segm)
                 self.rles.append(rle)
-                self.filename_and_class.append(f"{self.index_to_class[c]}_{image_name}")
+                self.filename_and_class.append(
+                    f"{self.index_to_class[c]}_{image_name}.png"
+                )
 
     def on_test_epoch_end(self) -> None:
         classes, filename = zip(*[x.split("_") for x in self.filename_and_class])
