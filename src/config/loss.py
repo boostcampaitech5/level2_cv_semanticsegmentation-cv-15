@@ -21,4 +21,4 @@ def _register_configs():
     cs.store(group="loss", name="bce_with_logits", node=BCEWithLogitsLossConfig)
     cs.store(group="loss", name="dice", node=DiceLossConfig)
     cs.store(group="loss", name="dice_bce", node=DiceBCELossConfig)
-    cs.store(group="loss", name="dice_bce_hausdorff", node=DiceBCELossConfig)
+    cs.store(group="loss", name="dice_bce_hausdorff", node=DiceBCEHausdorffLossConfig)
