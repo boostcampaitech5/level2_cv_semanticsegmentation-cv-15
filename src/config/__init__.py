@@ -17,7 +17,7 @@ full_builds = make_custom_builds_fn(
 
 defaults = [
     "_self_",
-    {"architecture": "unet++_resnet152_imagenet"},
+    {"architecture": "unet++"},
     {"optimizer": "adam"},
     {"loss": "dice_bce"},
     {"scheduler": "onecycle"},

@@ -1,4 +1,5 @@
 from albumentations import (
+    CLAHE,
     Compose,
     ElasticTransform,
     GridDistortion,
@@ -6,6 +7,7 @@ from albumentations import (
     Normalize,
     OpticalDistortion,
     Resize,
+    Sharpen,
     ToGray,
 )
 from albumentations.pytorch import ToTensorV2
@@ -43,6 +45,10 @@ GridDistortionConfig = full_builds(GridDistortion, p=0.5)
 
 OpticalDistortionConfig = full_builds(OpticalDistortion, p=0.5)
 
+SharpenConfig = full_builds(Sharpen, p=1.0, alpha=(0.2, 0.5), lightness=(0.5, 1.0))
+
+CLAHEConfig = full_builds(CLAHE, p=1.0, clip_limit=(1, 4), tile_grid_size=(8, 8))
+
 BasicTrainTransformConfig = full_builds(
     Compose,
     transforms=builds(
@@ -72,6 +78,20 @@ BasicTestTransformConfig = full_builds(
     transforms=builds(
         list,
         [
+            ResizeConfig,
+            NormalizeConfig,
+            ToTensorV2Config,
+        ],
+    ),
+)
+
+ClaheSharpenTransformConfig = full_builds(
+    Compose,
+    transforms=builds(
+        list,
+        [
+            SharpenConfig,
+            CLAHEConfig,
             ResizeConfig,
             NormalizeConfig,
             ToTensorV2Config,
@@ -175,6 +195,21 @@ def _register_configs():
         group="datamodule/test_dataset/transforms",
         name="basic_test_transform",
         node=BasicTestTransformConfig,
+    )
+    cs.store(
+        group="datamodule/train_dataset/transforms",
+        name="aug1_train_transform",
+        node=ClaheSharpenTransformConfig,
+    )
+    cs.store(
+        group="datamodule/val_dataset/transforms",
+        name="aug1_val_transform",
+        node=ClaheSharpenTransformConfig,
+    )
+    cs.store(
+        group="datamodule/test_dataset/transforms",
+        name="aug1_test_transform",
+        node=ClaheSharpenTransformConfig,
     )
 
     # datamodule/dataloader config
