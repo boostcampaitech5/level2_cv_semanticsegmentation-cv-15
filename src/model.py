@@ -12,7 +12,7 @@ from torchmetrics import MeanMetric
 from src.utils import encode_mask_to_rle
 
 
-class UNetPlusPlusResNet50(LightningModule):
+class LightningModel(LightningModule):
     def __init__(
         self,
         model: nn.Module,

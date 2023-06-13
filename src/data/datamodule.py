@@ -10,6 +10,7 @@ class XRayDataModule(LightningDataModule):
         val_loader,
         test_dataset,
         test_loader,
+        transforms,
     ):
         super().__init__()
 
@@ -19,12 +20,13 @@ class XRayDataModule(LightningDataModule):
         self.val_loader = val_loader
         self.test_dataset = test_dataset
         self.test_loader = test_loader
+        self.transforms = transforms
 
     def train_dataloader(self):
-        return self.train_loader(dataset=self.train_dataset())
+        return self.train_loader(dataset=self.train_dataset(transforms=self.transforms))
 
     def val_dataloader(self):
-        return self.val_loader(dataset=self.val_dataset())
+        return self.val_loader(dataset=self.val_dataset(transforms=self.transforms))
 
     def test_dataloader(self):
-        return self.test_loader(dataset=self.test_dataset())
+        return self.test_loader(dataset=self.test_dataset(transforms=self.transforms))
