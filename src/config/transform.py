@@ -106,6 +106,19 @@ ClaheConfig = full_builds(
     ),
 )
 
+ResizeMediumClaheConfig = full_builds(
+    Compose,
+    transforms=builds(
+        list,
+        [
+            CLAHEConfig,
+            ResizeConfig(height=1024, width=1024),
+            NormalizeConfig,
+            ToTensorV2Config,
+        ],
+    ),
+)
+
 
 def _register_configs():
     cs = ConfigStore.instance()
@@ -136,4 +149,10 @@ def _register_configs():
         group="transforms",
         name="clahe",
         node=ClaheConfig,
+    )
+
+    cs.store(
+        group="transforms",
+        name="clahe_medium",
+        node=ResizeMediumClaheConfig,
     )

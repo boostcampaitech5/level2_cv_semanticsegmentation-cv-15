@@ -404,12 +404,13 @@ blocks_dict = {"BASIC": BasicBlock, "BOTTLENECK": Bottleneck}
 
 
 class HighResolutionNet(nn.Module):
-    def __init__(self, version_number):
+    def __init__(self, version_number, output_size=512):
         self.version_number = version_number
         self.cfg = version(self.version_number)
         global ALIGN_CORNERS
         super(HighResolutionNet, self).__init__()
         ALIGN_CORNERS = False
+        self.output_size = output_size
 
         # stem net
         self.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=2, padding=1, bias=False)
@@ -631,7 +632,10 @@ class HighResolutionNet(nn.Module):
         x = self.last_layer(x)
 
         x = F.interpolate(
-            x, size=(512, 512), mode="bilinear", align_corners=ALIGN_CORNERS
+            x,
+            size=(self.output_size, self.output_size),
+            mode="bilinear",
+            align_corners=ALIGN_CORNERS,
         )
 
         return x
