@@ -21,19 +21,16 @@ defaults = [
     {"optimizer": "adam"},
     {"loss": "dice_bce"},
     {"scheduler": "onecycle"},
-    {"datamodule": "xray"},
-    {"datamodule/train_dataset": "basic_train_dataset"},
-    {"datamodule/val_dataset": "basic_val_dataset"},
-    {"datamodule/test_dataset": "basic_test_dataset"},
-    {"datamodule/train_dataset/transforms": "basic_train_transform"},
-    {"datamodule/val_dataset/transforms": "basic_val_transform"},
-    {"datamodule/test_dataset/transforms": "basic_test_transform"},
-    {"datamodule/train_loader": "basic_train_loader"},
-    {"datamodule/val_loader": "basic_val_loader"},
-    {"datamodule/test_loader": "basic_test_loader"},
+    {"train_dataset": "basic_train_dataset"},
+    {"val_dataset": "basic_val_dataset"},
+    {"test_dataset": "basic_test_dataset"},
+    {"train_loader": "basic_train_loader"},
+    {"val_loader": "basic_val_loader"},
+    {"test_loader": "basic_test_loader"},
+    {"transforms": "resize_small"},
     {"trainer": "basic"},
-    {"trainer/callbacks": "basic_callbacks"},
-    {"trainer/logger": "wandb"},
+    {"callbacks": "basic_callbacks"},
+    {"logger": "wandb"},
 ]
 
 
@@ -44,8 +41,16 @@ class Config:
     optimizer: Any = MISSING
     loss: Any = MISSING
     scheduler: Any = MISSING
-    datamodule: Any = MISSING
+    train_dataset: Any = MISSING
+    val_dataset: Any = MISSING
+    test_dataset: Any = MISSING
+    train_loader: Any = MISSING
+    val_loader: Any = MISSING
+    test_loader: Any = MISSING
+    transforms: Any = MISSING
     trainer: Any = MISSING
+    callbacks: Any = MISSING
+    logger: Any = MISSING
 
 
 def register_configs():
