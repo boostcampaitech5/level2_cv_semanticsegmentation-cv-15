@@ -36,7 +36,7 @@ DeepLabV3PlusConfig = full_builds(
     classes=29,
 )
 
-HRNetConfig = full_builds(HighResolutionNet, version_number=48)
+HRNetConfig = full_builds(HighResolutionNet, version_number=48, output_size=512)
 
 
 def _register_configs():
