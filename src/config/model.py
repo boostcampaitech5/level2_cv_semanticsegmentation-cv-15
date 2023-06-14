@@ -2,6 +2,7 @@ from hydra.core.config_store import ConfigStore
 from segmentation_models_pytorch import DeepLabV3, DeepLabV3Plus, Unet, UnetPlusPlus
 
 from src.architecture.HRNet import HighResolutionNet
+from src.architecture.Unet3Plus import Unet3Plus
 from src.config import full_builds
 
 UnetConfig = full_builds(
@@ -38,6 +39,13 @@ DeepLabV3PlusConfig = full_builds(
 
 HRNetConfig = full_builds(HighResolutionNet, version_number=48, output_size=512)
 
+Unet3PlusConfig = full_builds(
+    Unet3Plus,
+    encoder_name="timm-resnest269e",
+    encoder_weights="imagenet",
+    in_channels=3,
+    classes=29,
+)
 
 def _register_configs():
     cs = ConfigStore.instance()
@@ -65,5 +73,10 @@ def _register_configs():
     cs.store(
         group="architecture",
         name="hrnet",
+        node=HRNetConfig,
+    )
+    cs.store(
+        group="architecture",
+        name="unet3plus",
         node=HRNetConfig,
     )
