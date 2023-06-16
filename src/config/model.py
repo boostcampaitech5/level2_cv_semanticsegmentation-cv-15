@@ -47,6 +47,16 @@ Unet3PlusConfig = full_builds(
     classes=29,
 )
 
+HRNetUnet3PlusConfig = full_builds(
+    Unet3Plus,
+    encoder_name="tu-hrnet_w48",
+    encoder_depth=3,
+    encoder_weights="imagenet",
+    in_channels=3,
+    classes=29,
+)
+
+
 def _register_configs():
     cs = ConfigStore.instance()
 
@@ -79,4 +89,9 @@ def _register_configs():
         group="architecture",
         name="unet3plus",
         node=HRNetConfig,
+    )
+    cs.store(
+        group="architecture",
+        name="hrnetunet3plus",
+        node=HRNetUnet3PlusConfig,
     )
