@@ -5,7 +5,7 @@ from mmcv.cnn import ConvModule
 from mmseg.registry import MODELS
 
 from ..utils import SelfAttentionBlock as _SelfAttentionBlock
-from .decode_head import BaseDecodeHead
+from .decode_head import BaseDecodeHead, LossByFeatMixIn
 
 
 class PPMConcat(nn.ModuleList):
@@ -284,3 +284,8 @@ class ANNHead(BaseDecodeHead):
         output = self.cls_seg(output)
 
         return output
+
+
+@MODELS.register_module()
+class ANNHeadWithoutAccuracy(LossByFeatMixIn, ANNHead):
+    pass

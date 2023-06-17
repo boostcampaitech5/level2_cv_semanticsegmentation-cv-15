@@ -9,7 +9,7 @@ from mmengine.device import get_device
 from mmseg.registry import MODELS
 
 from ..utils import resize
-from .decode_head import BaseDecodeHead
+from .decode_head import BaseDecodeHead, LossByFeatMixIn
 
 
 class Matrix_Decomposition_2D_Base(nn.Module):
@@ -251,3 +251,8 @@ class LightHamHead(BaseDecodeHead):
         output = self.align(x)
         output = self.cls_seg(output)
         return output
+
+
+@MODELS.register_module()
+class LightHamHeadWithoutAccuracy(LossByFeatMixIn, LightHamHead):
+    pass

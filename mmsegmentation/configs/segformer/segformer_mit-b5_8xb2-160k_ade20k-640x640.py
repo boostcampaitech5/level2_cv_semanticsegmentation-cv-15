@@ -29,7 +29,7 @@ test_dataloader = val_dataloader
 # model settings
 model = dict(
     data_preprocessor=data_preprocessor,
-    pretrained="pretrain/mit_b5.pth",
+    pretrained="https://download.openmmlab.com/mmsegmentation/v0.5/segformer/segformer_mit-b5_640x640_160k_ade20k/segformer_mit-b5_640x640_160k_ade20k_20210801_121243-41d2845b.pth",
     backbone=dict(embed_dims=64, num_heads=[1, 2, 5, 8], num_layers=[3, 6, 40, 3]),
     decode_head=dict(in_channels=[64, 128, 320, 512]),
 )

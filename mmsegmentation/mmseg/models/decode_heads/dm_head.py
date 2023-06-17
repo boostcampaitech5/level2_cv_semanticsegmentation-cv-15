@@ -5,7 +5,7 @@ import torch.nn.functional as F
 from mmcv.cnn import ConvModule, build_activation_layer, build_norm_layer
 from mmseg.registry import MODELS
 
-from .decode_head import BaseDecodeHead
+from .decode_head import BaseDecodeHead, LossByFeatMixIn
 
 
 class DCM(nn.Module):
@@ -147,3 +147,8 @@ class DMHead(BaseDecodeHead):
         output = self.bottleneck(dcm_outs)
         output = self.cls_seg(output)
         return output
+
+
+@MODELS.register_module()
+class DMHeadWithoutAccuracy(LossByFeatMixIn, DMHead):
+    pass

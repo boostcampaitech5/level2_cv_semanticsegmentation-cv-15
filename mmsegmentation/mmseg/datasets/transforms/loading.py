@@ -2,6 +2,8 @@
 import warnings
 from typing import Dict, Optional, Union
 
+import json
+import cv2
 import mmcv
 import mmengine.fileio as fileio
 import numpy as np
@@ -130,6 +132,119 @@ class LoadAnnotations(MMCV_LoadAnnotations):
         repr_str += f"imdecode_backend='{self.imdecode_backend}', "
         repr_str += f"backend_args={self.backend_args})"
         return repr_str
+
+
+@TRANSFORMS.register_module()
+class CustomLoadAnnotations(LoadAnnotations):
+    def __init__(
+        self,
+        reduce_zero_label=None,
+        backend_args=None,
+        imdecode_backend="pillow",
+        **kwargs,
+    ):
+        super().__init__(
+            reduce_zero_label=reduce_zero_label,
+            imdecode_backend=imdecode_backend,
+            backend_args=backend_args,
+            **kwargs,
+        )
+
+        self.classes = [
+            "finger-1",
+            "finger-2",
+            "finger-3",
+            "finger-4",
+            "finger-5",
+            "finger-6",
+            "finger-7",
+            "finger-8",
+            "finger-9",
+            "finger-10",
+            "finger-11",
+            "finger-12",
+            "finger-13",
+            "finger-14",
+            "finger-15",
+            "finger-16",
+            "finger-17",
+            "finger-18",
+            "finger-19",
+            "Trapezium",
+            "Trapezoid",
+            "Capitate",
+            "Hamate",
+            "Scaphoid",
+            "Lunate",
+            "Triquetrum",
+            "Pisiform",
+            "Radius",
+            "Ulna",
+        ]
+
+        self.class2ind = {v: i for i, v in enumerate(self.classes)}
+        self.image_size = (2048, 2048)
+        self.reduce_zero_label = reduce_zero_label
+        if self.reduce_zero_label is not None:
+            warnings.warn(
+                "`reduce_zero_label` will be deprecated, "
+                "if you would like to ignore the zero label, please "
+                "set `reduce_zero_label=True` when dataset "
+                "initialized"
+            )
+        self.imdecode_backend = imdecode_backend
+
+    def _load_seg_map(self, results: dict) -> None:
+        label_path = results["seg_map_path"]
+
+        # Process a label of shape (H, W, NC)
+        label_shape = self.image_size + (len(self.classes),)
+        label = np.zeros(label_shape, dtype=np.uint8)
+
+        # Read label file
+        with open(label_path, "r") as f:
+            annotations = json.load(f)
+        annotations = annotations["annotations"]
+
+        # Iterate over each class
+        for ann in annotations:
+            c = ann["label"]
+            class_ind = self.class2ind[c]
+            points = np.array(ann["points"])
+
+            # Polygon to mask
+            class_label = np.zeros(self.image_size, dtype=np.uint8)
+            cv2.fillPoly(class_label, [points], 1)
+            label[..., class_ind] = class_label
+
+        # reduce zero_label
+        if self.reduce_zero_label is None:
+            self.reduce_zero_label = results["reduce_zero_label"]
+        assert self.reduce_zero_label == results["reduce_zero_label"], (
+            "Initialize dataset with `reduce_zero_label` as "
+            f'{results["reduce_zero_label"]} but when load annotation '
+            f"the `reduce_zero_label` is {self.reduce_zero_label}"
+        )
+        if self.reduce_zero_label:
+            # avoid using underflow conversion
+            label[label == 0] = 255
+            label = label - 1
+            label[label == 254] = 255
+        # modify if custom classes
+        if results.get("label_map", None) is not None:
+            # Add deep copy to solve bug of repeatedly
+            # replace `label`, which is reported in
+            # https://github.com/open-mmlab/mmsegmentation/pull/1445/
+            label_copy = label.copy()
+            for old_id, new_id in results["label_map"].items():
+                label[label_copy == old_id] = new_id
+
+        # Assign the label to results["gt_seg_map"]
+        # label = np.transpose(label, (2, 0, 1))
+        results["gt_seg_map"] = label
+
+        # Append "gt_seg_map" to seg_fields
+        results["seg_fields"].append("gt_seg_map")
 
 
 @TRANSFORMS.register_module()

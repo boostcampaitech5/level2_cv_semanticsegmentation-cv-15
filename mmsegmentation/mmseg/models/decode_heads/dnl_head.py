@@ -5,6 +5,7 @@ from mmseg.registry import MODELS
 from torch import nn
 
 from .fcn_head import FCNHead
+from .decode_head import LossByFeatMixIn
 
 
 class DisentangledNonLocal2d(NonLocal2d):
@@ -139,3 +140,7 @@ class DNLHead(FCNHead):
             output = self.conv_cat(torch.cat([x, output], dim=1))
         output = self.cls_seg(output)
         return output
+
+@MODELS.register_module()
+class DNLHeadWithoutAccuracy(LossByFeatMixIn, DNLHead):
+    pass

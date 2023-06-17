@@ -3,6 +3,7 @@ import copy
 import warnings
 from typing import Dict, List, Optional, Sequence, Tuple, Union
 
+import json
 import cv2
 import mmcv
 import numpy as np
@@ -13,6 +14,75 @@ from mmseg.datasets.dataset_wrappers import MultiImageMixDataset
 from mmseg.registry import TRANSFORMS
 from numpy import random
 from scipy.ndimage import gaussian_filter
+
+
+@TRANSFORMS.register_module()
+class LoadHandBoneAnnotations(BaseTransform):
+    def __init__(self, image_size=(2048, 2048)):
+        self.classes = [
+            "finger-1",
+            "finger-2",
+            "finger-3",
+            "finger-4",
+            "finger-5",
+            "finger-6",
+            "finger-7",
+            "finger-8",
+            "finger-9",
+            "finger-10",
+            "finger-11",
+            "finger-12",
+            "finger-13",
+            "finger-14",
+            "finger-15",
+            "finger-16",
+            "finger-17",
+            "finger-18",
+            "finger-19",
+            "Trapezium",
+            "Trapezoid",
+            "Capitate",
+            "Hamate",
+            "Scaphoid",
+            "Lunate",
+            "Triquetrum",
+            "Pisiform",
+            "Radius",
+            "Ulna",
+        ]
+        self.image_size = image_size
+        self.class2ind = {v: i for i, v in enumerate(self.classes)}
+
+    def transform(self, result):
+        label_path = result["seg_map_path"]
+
+        label_shape = self.image_size + (len(self.classes),)
+        label = np.zeros(label_shape, dtype=np.uint8)
+
+        with open(label_path, "r") as f:
+            annotations = json.load(f)
+        annotations = annotations["annotations"]
+
+        for ann in annotations:
+            c = ann["label"]
+            class_ind = self.class2ind[c]
+            points = np.array(ann["points"])
+
+            class_label = np.zeros(self.image_size, dtype=np.uint8)
+            cv2.fillPoly(class_label, [points], 1)
+            label[..., class_ind] = class_label
+
+        result["gt_seg_map"] = label
+
+        return result
+
+
+@TRANSFORMS.register_module()
+class TransposeAnnotations(BaseTransform):
+    def transform(self, result):
+        result["gt_seg_map"] = np.transpose(result["gt_seg_map"], (2, 0, 1))
+
+        return result
 
 
 @TRANSFORMS.register_module()

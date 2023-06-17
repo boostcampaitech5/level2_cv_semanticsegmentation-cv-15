@@ -7,7 +7,7 @@ import torch.nn.functional as F
 from mmcv.cnn import ConvModule, build_activation_layer, build_norm_layer
 from mmcv.cnn.bricks.transformer import FFN, MultiheadAttention, build_transformer_layer
 from mmengine.logging import print_log
-from mmseg.models.decode_heads.decode_head import BaseDecodeHead
+from .decode_head import BaseDecodeHead, LossByFeatMixIn
 from mmseg.registry import MODELS
 from mmseg.utils import SampleList
 from torch import Tensor
@@ -462,3 +462,8 @@ class IterativeDecodeHead(BaseDecodeHead):
                 losses[f"{k}.s{i}"] = v
 
         return losses
+
+
+@MODELS.register_module()
+class IterativeDecodeHeadWithoutAccuracy(LossByFeatMixIn, IterativeDecodeHead):
+    pass

@@ -6,7 +6,7 @@ from mmcv.cnn import ConvModule
 from mmseg.registry import MODELS
 
 from ..utils import resize
-from .decode_head import BaseDecodeHead
+from .decode_head import BaseDecodeHead, LossByFeatMixIn
 
 
 class ACM(nn.Module):
@@ -174,3 +174,7 @@ class APCHead(BaseDecodeHead):
         output = self.bottleneck(acm_outs)
         output = self.cls_seg(output)
         return output
+
+@MODELS.register_module()
+class APCHeadWithoutAccuracy(LossByFeatMixIn, APCHead):
+    pass

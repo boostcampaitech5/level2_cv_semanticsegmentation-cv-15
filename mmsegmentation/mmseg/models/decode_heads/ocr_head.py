@@ -8,6 +8,7 @@ from mmseg.registry import MODELS
 from ..utils import SelfAttentionBlock as _SelfAttentionBlock
 from ..utils import resize
 from .cascade_decode_head import BaseCascadeDecodeHead
+from .decode_head import LossByFeatMixIn
 
 
 class SpatialGatherModule(nn.Module):
@@ -128,3 +129,8 @@ class OCRHead(BaseCascadeDecodeHead):
         output = self.cls_seg(object_context)
 
         return output
+
+
+@MODELS.register_module()
+class OCRHeadWithoutAccuracy(LossByFeatMixIn, OCRHead):
+    pass

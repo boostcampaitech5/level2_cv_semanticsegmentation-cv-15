@@ -2,7 +2,7 @@
 import torch
 import torch.nn as nn
 from mmcv.cnn import ConvModule
-from mmseg.models.decode_heads.decode_head import BaseDecodeHead
+from .decode_head import BaseDecodeHead, LossByFeatMixIn
 from mmseg.registry import MODELS
 
 from ..utils import resize
@@ -69,3 +69,8 @@ class SegformerHead(BaseDecodeHead):
         out = self.cls_seg(out)
 
         return out
+
+
+@MODELS.register_module()
+class SegformerHeadWithoutAccuracy(LossByFeatMixIn, SegformerHead):
+    pass

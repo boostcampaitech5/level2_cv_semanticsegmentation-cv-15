@@ -8,7 +8,7 @@ import torch.nn.functional as F
 from mmcv.cnn import ConvModule
 from mmseg.registry import MODELS
 
-from .decode_head import BaseDecodeHead
+from .decode_head import BaseDecodeHead, LossByFeatMixIn
 
 
 def reduce_mean(tensor):
@@ -174,3 +174,8 @@ class EMAHead(BaseDecodeHead):
             output = self.conv_cat(torch.cat([x, output], dim=1))
         output = self.cls_seg(output)
         return output
+
+
+@MODELS.register_module()
+class EMAHeadWithoutAccuracy(LossByFeatMixIn, EMAHead):
+    pass

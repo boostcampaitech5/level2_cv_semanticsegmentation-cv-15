@@ -18,6 +18,7 @@ from mmseg.utils import SampleList
 from ..losses import accuracy
 from ..utils import resize
 from .cascade_decode_head import BaseCascadeDecodeHead
+from .decode_head import LossByFeatMixIn
 
 
 def calculate_uncertainty(seg_logits):
@@ -365,3 +366,8 @@ class PointHead(BaseCascadeDecodeHead):
         point_coords[:, :, 0] = w_step / 2.0 + (point_indices % width).float() * w_step
         point_coords[:, :, 1] = h_step / 2.0 + (point_indices // width).float() * h_step
         return point_indices, point_coords
+
+
+@MODELS.register_module()
+class PointHeadWithoutAccuracy(LossByFeatMixIn, PointHead):
+    pass

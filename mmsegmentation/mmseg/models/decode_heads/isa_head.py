@@ -7,7 +7,7 @@ from mmcv.cnn import ConvModule
 from mmseg.registry import MODELS
 
 from ..utils import SelfAttentionBlock as _SelfAttentionBlock
-from .decode_head import BaseDecodeHead
+from .decode_head import BaseDecodeHead, LossByFeatMixIn
 
 
 class SelfAttentionBlock(_SelfAttentionBlock):
@@ -146,3 +146,8 @@ class ISAHead(BaseDecodeHead):
         out = self.cls_seg(x)
 
         return out
+
+
+@MODELS.register_module()
+class ISAHeadWithoutAccuracy(LossByFeatMixIn, ISAHead):
+    pass

@@ -6,6 +6,7 @@ from .loading import (
     LoadBiomedicalData,
     LoadBiomedicalImageFromFile,
     LoadImageFromNDArray,
+    CustomLoadAnnotations,
 )
 
 # yapf: disable
@@ -35,6 +36,7 @@ from .transforms import (
 # yapf: enable
 __all__ = [
     "LoadAnnotations",
+    "CustomLoadAnnotations",
     "RandomCrop",
     "BioMedical3DRandomCrop",
     "SegRescale",
