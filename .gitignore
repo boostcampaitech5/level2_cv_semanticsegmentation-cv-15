@@ -125,3 +125,8 @@ test.py
 
 # hydra log
 /outputs
+
+# mmseg
+/mmsegmentation/mmseg/.mim
+/mmsegmentation/exp
+/mmsegmentation/tools/output.csv
