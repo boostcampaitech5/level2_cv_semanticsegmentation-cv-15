@@ -8,7 +8,7 @@ from mmengine.model import BaseModule
 from mmseg.registry import MODELS
 
 from ..utils import resize
-from .decode_head import BaseDecodeHead
+from .decode_head import BaseDecodeHead, LossByFeatMixIn
 
 
 class ReassembleBlocks(BaseModule):
@@ -302,3 +302,7 @@ class DPTHead(BaseDecodeHead):
         out = self.project(out)
         out = self.cls_seg(out)
         return out
+
+@MODELS.register_module()
+class DPTHeadWithoutAccuracy(LossByFeatMixIn, DPTHead):
+    pass

@@ -21,6 +21,7 @@ from .potsdam import PotsdamDataset
 from .refuge import REFUGEDataset
 from .stare import STAREDataset
 from .synapse import SynapseDataset
+from .handbone import HandBoneDataset
 
 # yapf: disable
 from .transforms import (
@@ -105,4 +106,5 @@ __all__ = [
     "REFUGEDataset",
     "MapillaryDataset_v1",
     "MapillaryDataset_v2",
+    "HandBoneDataset",
 ]

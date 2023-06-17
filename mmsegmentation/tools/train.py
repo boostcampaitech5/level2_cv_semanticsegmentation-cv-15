@@ -59,19 +59,26 @@ def main():
 
     # load config
     cfg = Config.fromfile(args.config)
+    # cfg = Config.fromfile(
+    #     "/opt/ml/level2_cv_semanticsegmentation-cv-15/mmsegmentation/configs/hype_custom/seg_former_b5.py"
+    # )
     cfg.launcher = args.launcher
+    cfg.work_dir = osp.join(
+        "/opt/ml/level2_cv_semanticsegmentation-cv-15/mmsegmentation",
+        "exp/test",
+    )
     if args.cfg_options is not None:
         cfg.merge_from_dict(args.cfg_options)
 
-    # work_dir is determined in this priority: CLI > segment in file > filename
-    if args.work_dir is not None:
-        # update configs according to CLI args if args.work_dir is not None
-        cfg.work_dir = args.work_dir
-    elif cfg.get("work_dir", None) is None:
-        # use config filename as default work_dir if cfg.work_dir is None
-        cfg.work_dir = osp.join(
-            "./work_dirs", osp.splitext(osp.basename(args.config))[0]
-        )
+    # # work_dir is determined in this priority: CLI > segment in file > filename
+    # if args.work_dir is not None:
+    #     # update configs according to CLI args if args.work_dir is not None
+    #     cfg.work_dir = args.work_dir
+    # elif cfg.get("work_dir", None) is None:
+    #     # use config filename as default work_dir if cfg.work_dir is None
+    #     cfg.work_dir = osp.join(
+    #         "./work_dirs", osp.splitext(osp.basename(args.config))[0]
+    #     )
 
     # enable automatic-mixed-precision training
     if args.amp is True:

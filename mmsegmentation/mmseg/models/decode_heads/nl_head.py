@@ -4,6 +4,7 @@ from mmcv.cnn import NonLocal2d
 from mmseg.registry import MODELS
 
 from .fcn_head import FCNHead
+from .decode_head import LossByFeatMixIn
 
 
 @MODELS.register_module()
@@ -45,3 +46,8 @@ class NLHead(FCNHead):
             output = self.conv_cat(torch.cat([x, output], dim=1))
         output = self.cls_seg(output)
         return output
+
+
+@MODELS.register_module()
+class NLHeadWithoutAccuracy(LossByFeatMixIn, NLHead):
+    pass

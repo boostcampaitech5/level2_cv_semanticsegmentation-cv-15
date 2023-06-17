@@ -4,7 +4,7 @@ import torch.nn as nn
 from mmcv.cnn import ConvModule
 from mmseg.registry import MODELS
 
-from .decode_head import BaseDecodeHead
+from .decode_head import BaseDecodeHead, LossByFeatMixIn
 
 
 @MODELS.register_module()
@@ -96,3 +96,8 @@ class FCNHead(BaseDecodeHead):
         output = self._forward_feature(inputs)
         output = self.cls_seg(output)
         return output
+
+
+@MODELS.register_module()
+class FCNHeadWithoutAccuracy(LossByFeatMixIn, FCNHead):
+    pass

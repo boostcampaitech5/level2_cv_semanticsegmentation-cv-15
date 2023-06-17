@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 from mmcv.cnn import ConvModule, build_activation_layer, build_norm_layer
 from mmengine.model import BaseModule
-from mmseg.models.decode_heads.decode_head import BaseDecodeHead
+from .decode_head import BaseDecodeHead, LossByFeatMixIn
 from mmseg.models.losses import accuracy
 from mmseg.models.utils import resize
 from mmseg.registry import MODELS
@@ -188,3 +188,8 @@ class PIDHead(BaseDecodeHead):
         loss["loss_sem_bd"] = self.loss_decode[3](i_logit, sem_bd_label)
         loss["acc_seg"] = accuracy(i_logit, sem_label, ignore_index=self.ignore_index)
         return loss
+
+
+@MODELS.register_module()
+class PIDHeadWithoutAccuracy(LossByFeatMixIn, PIDHead):
+    pass

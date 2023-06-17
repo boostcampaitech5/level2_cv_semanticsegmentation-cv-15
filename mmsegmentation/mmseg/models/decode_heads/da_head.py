@@ -9,7 +9,7 @@ from mmseg.utils import SampleList, add_prefix
 from torch import Tensor, nn
 
 from ..utils import SelfAttentionBlock as _SelfAttentionBlock
-from .decode_head import BaseDecodeHead
+from .decode_head import BaseDecodeHead, LossByFeatMixIn
 
 
 class PAM(_SelfAttentionBlock):
@@ -187,3 +187,8 @@ class DAHead(BaseDecodeHead):
             add_prefix(super().loss_by_feat(cam_seg_logit, batch_data_samples), "cam")
         )
         return loss
+
+
+@MODELS.register_module()
+class DAHeadWithoutAccuracy(LossByFeatMixIn, DAHead):
+    pass

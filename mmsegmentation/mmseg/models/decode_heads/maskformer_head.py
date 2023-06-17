@@ -17,6 +17,8 @@ from mmseg.structures.seg_data_sample import SegDataSample
 from mmseg.utils import ConfigType, SampleList
 from torch import Tensor
 
+from .decode_head import LossByFeatMixIn
+
 
 @MODELS.register_module()
 class MaskFormerHead(MMDET_MaskFormerHead):
@@ -173,3 +175,8 @@ class MaskFormerHead(MMDET_MaskFormerHead):
         mask_pred = mask_pred_results.sigmoid()
         seg_logits = torch.einsum("bqc,bqhw->bchw", cls_score, mask_pred)
         return seg_logits
+
+
+@MODELS.register_module()
+class MaskFormerHeadWithoutAccuracy(LossByFeatMixIn, MaskFormerHead):
+    pass

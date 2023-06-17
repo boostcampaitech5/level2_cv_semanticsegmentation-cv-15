@@ -11,7 +11,7 @@ from torch import Tensor
 
 from ..builder import build_loss
 from ..utils import Encoding, resize
-from .decode_head import BaseDecodeHead
+from .decode_head import BaseDecodeHead, LossByFeatMixIn
 
 
 class EncModule(nn.Module):
@@ -205,3 +205,8 @@ class EncHead(BaseDecodeHead):
         )
         loss["loss_se"] = se_loss
         return loss
+
+
+@MODELS.register_module()
+class EncHeadWithoutAccuracy(LossByFeatMixIn, EncHead):
+    pass

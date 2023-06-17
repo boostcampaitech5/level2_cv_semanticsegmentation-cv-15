@@ -6,7 +6,7 @@ from mmengine.utils import is_tuple_of
 from mmseg.registry import MODELS
 
 from ..utils import resize
-from .decode_head import BaseDecodeHead
+from .decode_head import BaseDecodeHead, LossByFeatMixIn
 
 
 @MODELS.register_module()
@@ -98,3 +98,8 @@ class LRASPPHead(BaseDecodeHead):
             x = self.conv_ups[i](x)
 
         return self.cls_seg(x)
+
+
+@MODELS.register_module()
+class LRASPPHeadWithoutAccuracy(LossByFeatMixIn, LRASPPHead):
+    pass

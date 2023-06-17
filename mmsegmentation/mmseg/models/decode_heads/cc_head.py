@@ -3,6 +3,7 @@ import torch
 from mmseg.registry import MODELS
 
 from .fcn_head import FCNHead
+from .decode_head import LossByFeatMixIn
 
 try:
     from mmcv.ops import CrissCrossAttention
@@ -42,3 +43,8 @@ class CCHead(FCNHead):
             output = self.conv_cat(torch.cat([x, output], dim=1))
         output = self.cls_seg(output)
         return output
+
+
+@MODELS.register_module()
+class CCHeadWithoutAccuracy(LossByFeatMixIn, CCHead):
+    pass
