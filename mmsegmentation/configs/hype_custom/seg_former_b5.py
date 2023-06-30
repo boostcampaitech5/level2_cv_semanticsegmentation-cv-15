@@ -1,8 +1,9 @@
-_base_ = ["./seg_former.py"]
+_base_ = [
+    "../_base_/models/segformer_mit-b0.py",
+    "../_base_/datasets/handbone.py",
+    "../_base_/default_runtime.py",
+]
 
-norm_cfg = dict(type="SyncBN", requires_grad=True)
-
-# dataset settings
 data_preprocessor = dict(
     type="SegDataPreProcessor",
     mean=[0.0, 0.0, 0.0],
@@ -13,23 +14,51 @@ data_preprocessor = dict(
     seg_pad_val=255,
 )
 
-# model settings
 model = dict(
-    data_preprocessor=data_preprocessor,
-    pretrained="https://download.openmmlab.com/mmsegmentation/v0.5/segformer/segformer_mit-b5_640x640_160k_ade20k/segformer_mit-b5_640x640_160k_ade20k_20210801_121243-41d2845b.pth",
+    type="EncoderDecoderWithoutArgmax",
+    init_cfg=dict(
+        type="Pretrained",
+        # load ADE20k pretrained EncoderDecoder from mmsegmentation
+        checkpoint="https://download.openmmlab.com/mmsegmentation/v0.5/segformer/segformer_mit-b5_640x640_160k_ade20k/segformer_mit-b5_640x640_160k_ade20k_20210801_121243-41d2845b.pth",
+    ),
     backbone=dict(embed_dims=64, num_heads=[1, 2, 5, 8], num_layers=[3, 6, 40, 3]),
-    decode_head=dict(in_channels=[64, 128, 320, 512]),
-    # auxiliary_head=dict(
-    #     type="FCNHeadWithoutAccuracy",
-    #     in_channels=1024,
-    #     in_index=2,
-    #     channels=256,
-    #     num_convs=1,
-    #     concat_input=False,
-    #     dropout_ratio=0.1,
-    #     num_classes=29,
-    #     norm_cfg=norm_cfg,
-    #     align_corners=False,
-    #     loss_decode=dict(type="CrossEntropyLoss", use_sigmoid=True, loss_weight=0.4),
-    # ),
+    data_preprocessor=data_preprocessor,
+    decode_head=dict(
+        type="SegformerHeadWithoutAccuracy",
+        num_classes=29,
+        in_channels=[64, 128, 320, 512],
+        loss_decode=dict(
+            type="CrossEntropyLoss",
+            use_sigmoid=True,
+            loss_weight=1.0,
+        ),
+    ),
+)
+
+# optimizer
+optimizer = dict(type="AdamW", lr=0.00006, betas=(0.9, 0.999), weight_decay=0.01)
+optim_wrapper = dict(type="OptimWrapper", optimizer=optimizer, clip_grad=None)
+# learning policy
+param_scheduler = [
+    dict(type="LinearLR", start_factor=1e-6, by_epoch=False, begin=0, end=2500),
+    dict(
+        type="PolyLR",
+        eta_min=0.0,
+        power=1.0,
+        begin=2500,
+        end=32000,
+        by_epoch=False,
+    ),
+]
+# training schedule for 20k
+train_cfg = dict(type="IterBasedTrainLoop", max_iters=32000)
+val_cfg = None
+test_cfg = dict(type="TestLoop")
+default_hooks = dict(
+    timer=dict(type="IterTimerHook"),
+    logger=dict(type="LoggerHook", interval=50, log_metric_by_epoch=False),
+    param_scheduler=dict(type="ParamSchedulerHook"),
+    checkpoint=dict(type="CheckpointHook", by_epoch=False, interval=2000),
+    sampler_seed=dict(type="DistSamplerSeedHook"),
+    visualization=dict(type="SegVisualizationHook"),
 )
