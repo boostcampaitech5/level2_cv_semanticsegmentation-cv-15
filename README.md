@@ -1,4 +1,5 @@
-![Untitled (1)](https://github.com/boostcampaitech5/level2_cv_semanticsegmentation-cv-15/assets/113486402/86e6349d-e036-44df-9a7c-dbfaafc2809f)
+![Untitled (1)](https://github.com/boostcampaitech5/level2_cv_semanticsegmentation-cv-15/assets/113486402/d3bca362-3b1d-4a6a-8982-6836656793f5)
+
 ## 📸 Handbone X-ray Semantic Segmentation Task
 ---
 
@@ -20,7 +21,7 @@
 ## 👨🏻‍💻 👩🏻‍💻 팀 구성
 
 -------------
-|![logo1](https://github.com/boostcampaitech5/level2_cv_semanticsegmentation-cv-15/assets/113486402/6e9692fd-9411-4ee7-ae39-94acfe2304b1)|![logo2](https://github.com/boostcampaitech5/level2_cv_semanticsegmentation-cv-15/assets/113486402/7730a504-010e-4ddd-a347-85fec9ee6255)|![logo3](https://github.com/boostcampaitech5/level2_cv_semanticsegmentation-cv-15/assets/113486402/f946e28a-078a-44cc-af96-c5ec728fd0fb)|![logo4](https://github.com/boostcampaitech5/level2_cv_semanticsegmentation-cv-15/assets/113486402/0798865d-833d-4f9e-a3cc-ace94f01b7c6)|![logo5](https://github.com/boostcampaitech5/level2_cv_semanticsegmentation-cv-15/assets/113486402/a5a302d5-594a-4290-bb1c-2b026d8081b5)|
+|![logo1](https://github.com/boostcampaitech5/level2_cv_semanticsegmentation-cv-15/assets/113486402/e8938309-329d-4cf3-8b6c-180df65e3894)|![logo2](https://github.com/boostcampaitech5/level2_cv_semanticsegmentation-cv-15/assets/113486402/95d4bbb7-645e-4fd6-b18c-9b5d16a26c82)|![logo3](https://github.com/boostcampaitech5/level2_cv_semanticsegmentation-cv-15/assets/113486402/a23de15c-8927-4207-ab8d-d78ff3a8971b)|![logo4](https://github.com/boostcampaitech5/level2_cv_semanticsegmentation-cv-15/assets/113486402/296eadab-cb6e-47f8-ae0f-55995476d4ba)|![logo5](https://github.com/boostcampaitech5/level2_cv_semanticsegmentation-cv-15/assets/113486402/c197b8b6-c898-4e2d-90ca-90700943e9ca)|
 | :---: | :---: | :---: | :---: |  :---: |
 | [김용우](https://github.com/yongwookim1) | [박종서](https://github.com/justinpark820) | [서영덕](https://github.com/SeoYoungDeok) |[신현준](https://github.com/june95) |[조수혜](https://github.com/suhyehye) |
 
@@ -85,7 +86,8 @@
 - 각 모델에 의료 데이터 solution에서 자주 사용되는 augmentation들을 적용하고 추가로 seed를 바꾸면서 hard, soft 앙상블 진행
 - 서버 GPU 용량 한계로 이미지를 1024 * 1024로 resize 후 학습
 
-![Untitled (2)](https://github.com/boostcampaitech5/level2_cv_semanticsegmentation-cv-15/assets/113486402/e703ea81-416d-48d0-8cd3-915900c63c94)
+![Untitled (2)](https://github.com/boostcampaitech5/level2_cv_semanticsegmentation-cv-15/assets/113486402/9970d78b-1583-45fe-b296-14921e18ead4)
+
 
 ## 🔍 Reference 및 출처
 
@@ -102,7 +104,8 @@
 
 ---
 
-<img width="1078" alt="Untitled (3)" src="https://github.com/boostcampaitech5/level2_cv_semanticsegmentation-cv-15/assets/113486402/a05ed12d-828d-4dc0-8d8e-157b4756a488">
+<img width="1078" alt="Untitled (3)" src="https://github.com/boostcampaitech5/level2_cv_semanticsegmentation-cv-15/assets/113486402/7c510893-9a75-48a9-93b0-87e11b78defb">
+
 
 
 - Public Dice coefficient : 0.9725 / Private Dice coefficient : 0.9729
